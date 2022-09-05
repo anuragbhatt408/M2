@@ -1,0 +1,214 @@
+C:\mongodb-database-tools-windows-x86_64-100.6.0\bin>mongoimport --db blazeclan --collection emps --file C:\mongodb-database-tools-windows-x86_64-100.6.0\bin\EMP.json
+2022-09-05T14:47:20.376+0530    connected to: mongodb://localhost/
+2022-09-05T14:47:20.473+0530    14 document(s) imported successfully. 0 document(s) failed to import.
+
+C:\mongodb-database-tools-windows-x86_64-100.6.0\bin>mongoimport --db blazeclan --collection depts --file C:\mongodb-database-tools-windows-x86_64-100.6.0\bin\DEPT.json
+2022-09-05T14:48:30.351+0530    connected to: mongodb://localhost/
+2022-09-05T14:48:30.476+0530    4 document(s) imported successfully. 0 document(s) failed to import.
+
+// 1
+blazeclan> db.depts.find().limit(1)
+[ { _id: 10, deptName: 'Accounting', location: 'New York' } ]
+blazeclan> db.emps.find().limit(1)
+[
+  {
+    _id: 7566,
+    empName: 'Jones',
+    designation: 'MANAGER',
+    mgrID: 7839,
+    hireDate: '1981-04-02T00:00:00',
+    salary: 2975,
+    deptID: 20,
+    hasComm: false
+  }
+]
+
+// 2
+blazeclan> db.depts.find().count()
+4
+
+blazeclan> db.depts.deleteMany({"deptName" : {$eq : "Operations"}})
+{ acknowledged: true, deletedCount: 1 }
+
+// 3
+blazeclan> db.emps.deleteMany({"designation" : {$eq : "SALESMAN"}})
+{ acknowledged: true, deletedCount: 4 }
+
+blazeclan> db.emps.find({"designation" : {$eq : "SALESMAN"}})
+
+
+// 4
+blazeclan> db.emps.updateOne({"_id" : 7900}, {$set : {"salary" : 1200}}, {upsert : 1})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+blazeclan> db.emps.find({"_id" : 7900})
+[
+  {
+    _id: 7900,
+    empName: 'James',
+    designation: 'CLERK',
+    mgrID: 7698,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 1200,
+    deptID: 30,
+    hasComm: false
+  }
+]
+
+// 5
+blazeclan> db.emps.updateOne({"_id" : 7900}, {salary : 1201})
+MongoInvalidArgumentError: Update document requires atomic operators
+
+// 6
+blazeclan> db.emps.find({"designation" : "MANAGER"}, {"empName" : 1, "salary" : 1})
+[
+  { _id: 7566, empName: 'Jones', salary: 2975 },
+  { _id: 7698, empName: 'Blake', salary: 2850 },
+  { _id: 7782, empName: 'Clark', salary: 2450 }
+]
+
+blazeclan> db.emps.updateMany({"designation" : "MANAGER"}, {$set : {salary : 3025}}, {upsert : 1})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({"designation" : "MANAGER"}, {"empName" : 1, "salary" : 1})
+[
+  { _id: 7566, empName: 'Jones', salary: 3025 },
+  { _id: 7698, empName: 'Blake', salary: 3025 },
+  { _id: 7782, empName: 'Clark', salary: 3025 }
+]
+
+// 7
+
+blazeclan> db.emps.updateMany({"_id" : 7566}, {$inc : {salary : 25}}, {upsert : 1})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({"_id" : 7566})
+[
+  {
+    _id: 7566,
+    empName: 'Jones',
+    designation: 'MANAGER',
+    mgrID: 7839,
+    hireDate: '1981-04-02T00:00:00',
+    salary: 3050,
+    deptID: 20,
+    hasComm: false
+  }
+]
+
+// 8
+
+blazeclan> db.emps.updateMany({designation: 'ANALYST'},{$inc:{"count":1}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    count: 1
+  }
+]
+
+// 9
+blazeclan> db.emps.updateMany({designation: 'ANALYST'},{$inc:{"testers":2}},{"upsert":true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    count: 3,
+    testers: 2
+  }
+
+]
+ 
+// 10
+blazeclan> db.emps.update({designation: 'ANALYST'},{$unset:{"count": " "}},{multi:true})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+blazeclan> db.emps.find({designation: 'ANALYST'})
+[
+  {
+    _id: 7902,
+    empName: 'Ford',
+    designation: 'ANALYST',
+    mgrID: 7566,
+    hireDate: '1981-12-03T00:00:00',
+    salary: 3000,
+    deptID: 20,
+    hasComm: false,
+    testers: 2
+  },
+]
+
+// 11
+blazeclan> db.depts.find()
+[
+  { _id: 10, deptName: 'Accounting', location: 'New York' },
+  { _id: 20, deptName: 'Research', location: 'Dallas' },
+  { _id: 30, deptName: 'Sales', location: 'Chicago' }
+]
+
+blazeclan> db.depts.updateMany({}, {$rename : {"location" : "city"} })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+
+blazeclan> db.depts.find()
+[
+  { _id: 20, deptName: 'Research', city: 'Dallas' },
+  { _id: 30, deptName: 'Sales', city: 'Chicago' },
+  { _id: 10, deptName: 'Accounting', city: 'New York' }
+]
+

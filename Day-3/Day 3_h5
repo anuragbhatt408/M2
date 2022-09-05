@@ -1,0 +1,200 @@
+mysql> use pubs;
+Database changed
+mysql> select title, pub_name from titles as t, publishers as p where t.pub_id = p.pub_id;
++-----------------------------------------------------------------+----------------------+
+| title                                                           | pub_name             |
++-----------------------------------------------------------------+----------------------+
+| The Busy Executive's Database Guide                             | Algodata Infosystems |
+| Cooking with Computers: Surreptitious Balance Sheets            | Algodata Infosystems |
+| You Can Combat Computer Stress!                                 | New Moon Books       |
+| Straight Talk About Computers                                   | Algodata Infosystems |
+| Silicon Valley Gastronomic Treats                               | Binnet & Hardley     |
+| The Gourmet Microwave                                           | Binnet & Hardley     |
+| The Psychology of Computer Cooking                              | Binnet & Hardley     |
+| But Is It User Friendly?                                        | Algodata Infosystems |
+| Secrets of Silicon Valley                                       | Algodata Infosystems |
+| Net Etiquette                                                   | Algodata Infosystems |
+| Computer Phobic AND Non-Phobic Individuals: Behavior Variations | Binnet & Hardley     |
+| Is Anger the Enemy?                                             | New Moon Books       |
+| Life Without Fear                                               | New Moon Books       |
+| Prolonged Data Deprivation: Four Case Studies                   | New Moon Books       |
+| Emotional Security: A New Algorithm                             | New Moon Books       |
+| Onions, Leeks, and Garlic: Cooking Secrets of the Mediterranean | Binnet & Hardley     |
+| Fifty Years in Buckingham Palace Kitchens                       | Binnet & Hardley     |
+| Sushi, Anyone?                                                  | Binnet & Hardley     |
++-----------------------------------------------------------------+----------------------+
+18 rows in set (0.01 sec)
+
+mysql> select pub_name, ifnull(ytd_sales, 0) from titles as t, publishers as p where t.pub_id = p.pub_id;
++----------------------+----------------------+
+| pub_name             | ifnull(ytd_sales, 0) |
++----------------------+----------------------+
+| Algodata Infosystems |                 4095 |
+| Algodata Infosystems |                 3876 |
+| New Moon Books       |                18722 |
+| Algodata Infosystems |                 4095 |
+| Binnet & Hardley     |                 2032 |
+| Binnet & Hardley     |                22246 |
+| Binnet & Hardley     |                    0 |
+| Algodata Infosystems |                 8780 |
+| Algodata Infosystems |                 4095 |
+| Algodata Infosystems |                    0 |
+| Binnet & Hardley     |                  375 |
+| New Moon Books       |                 2045 |
+| New Moon Books       |                  111 |
+| New Moon Books       |                 4072 |
+| New Moon Books       |                 3336 |
+| Binnet & Hardley     |                  375 |
+| Binnet & Hardley     |                15096 |
+| Binnet & Hardley     |                 4095 |
++----------------------+----------------------+
+18 rows in set (0.04 sec)
+
+mysql> select pub_name, au_lname, a.city from authors as a, publishers as p where a.city = p.city;
++----------------------+----------+----------+
+| pub_name             | au_lname | city     |
++----------------------+----------+----------+
+| Algodata Infosystems | Carson   | Berkeley |
+| Algodata Infosystems | Bennet   | Berkeley |
++----------------------+----------+----------+
+2 rows in set (0.04 sec)
+
+mysql> --
+mysql> --
+mysql> select distinct(p.pub_id), (p.pub_name), t.type from publishers as p, titles as t where t.pub_id = p.pub_id AND t.type="business";
++--------+----------------------+----------+
+| pub_id | pub_name             | type     |
++--------+----------------------+----------+
+| 1389   | Algodata Infosystems | business |
+| 0736   | New Moon Books       | business |
++--------+----------------------+----------+
+2 rows in set (0.00 sec)
+
+mysql> --
+mysql> --
+mysql> create table Empoyees(
+    -> 	empid	smallint,
+    -> 	ename	varchar(20),
+    -> 	dept_id smallint,
+    -> 	job	varchar(15),
+    -> 	mgr_id  int,
+    -> 	bsal	int );
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> CREATE TABLE departments (       dept_id SMALLINT,       dname VARCHAR(20),       location VARCHAR(15)   );
+ERROR 1050 (42S01): Table 'departments' already exists
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| departments    |
+| employees      |
+| empoyees       |
+| publishers     |
+| salgrades      |
+| titleauthor    |
+| titles         |
++----------------+
+8 rows in set (0.01 sec)
+
+mysql> drop empoyees;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'empoyees' at line 1
+mysql> drop table empoyees;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_pubs |
++----------------+
+| authors        |
+| departments    |
+| employees      |
+| publishers     |
+| salgrades      |
+| titleauthor    |
+| titles         |
++----------------+
+7 rows in set (0.01 sec)
+
+mysql> select from employees;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from employees' at line 1
+mysql> select * from employees;
++-------+----------+---------+-----------+--------+-------+
+| empid | ename    | dept_id | job       | mgr_id | bsal  |
++-------+----------+---------+-----------+--------+-------+
+|   101 | Sameer   |      10 | President |   NULL |  5000 |
+|   102 | Srinivas |      10 | VP        |    101 | 40000 |
+|   103 | Nanda    |      20 | VP        |    101 | 40000 |
+|   104 | Ram      |      30 | DGM       |    102 | 35000 |
+|   105 | Vivek    |      20 | PM        |    103 | 30000 |
+|   106 | Venkat   |      20 | Tech Lead |    105 | 25000 |
++-------+----------+---------+-----------+--------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from salgrades;
++-------+---------+---------+
+| grade | min_sal | max_sal |
++-------+---------+---------+
+| A     |   40001 |   50000 |
+| B     |   30001 |   40000 |
+| C     |   20001 |   30000 |
++-------+---------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from departments;
++---------+-------+-----------+
+| dept_id | dname | location  |
++---------+-------+-----------+
+|      10 | Crop  | Dallas    |
+|      20 | PW    | Bangalore |
+|      30 | SP    | Pune      |
+|      40 | MS    | Hyderabad |
++---------+-------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select e.ename, d.dept_id, d.dname from Employees as e, departments as d  where e.dept_id = d.dept_id;
++----------+---------+-------+
+| ename    | dept_id | dname |
++----------+---------+-------+
+| Sameer   |      10 | Crop  |
+| Srinivas |      10 | Crop  |
+| Nanda    |      20 | PW    |
+| Ram      |      30 | SP    |
+| Vivek    |      20 | PW    |
+| Venkat   |      20 | PW    |
++----------+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select e.job, d.location from Employees as e, departments as d where e.dept_id = d.dept_id AND d.dept_id=30;
++------+----------+
+| job  | location |
++------+----------+
+| DGM  | Pune     |
++------+----------+
+1 row in set (0.00 sec)
+
+mysql> --
+mysql> --
+mysql> select e.ename, d.dname from Employees as e, departments as d where e.dept_id = d.dept_id AND e.ename like '%a%';
++----------+-------+
+| ename    | dname |
++----------+-------+
+| Srinivas | Crop  |
+| Sameer   | Crop  |
+| Venkat   | PW    |
+| Nanda    | PW    |
+| Ram      | SP    |
++----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select e.ename,e.job,e.dept_id, d.dname,d.location from Employees as e, departments as d where e.dept_id = d.dept_id AND d.location  = 'Dallas';
++----------+-----------+---------+-------+----------+
+| ename    | job       | dept_id | dname | location |
++----------+-----------+---------+-------+----------+
+| Sameer   | President |      10 | Crop  | Dallas   |
+| Srinivas | VP        |      10 | Crop  | Dallas   |
++----------+-----------+---------+-------+----------+
+2 rows in set (0.00 sec)
+
+mysql> \t

@@ -1,0 +1,501 @@
+Microsoft Windows [Version 10.0.19042.1645]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\mongosh-1.5.4-win32-x64\bin>mongosh
+Current Mongosh Log ID: 63108a4f49b38b20c5f8f175
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.4
+Using MongoDB:          6.0.0
+Using Mongosh:          1.5.4
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2022-08-23T15:00:56.960+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+------
+   Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+   metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+   The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+   and anyone you share the URL with. MongoDB may use this information to make product
+   improvements and to suggest MongoDB products and deployment options to you.
+
+   To enable free monitoring, run the following command: db.enableFreeMonitoring()
+   To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+------
+
+test> help
+
+  Shell Help:
+
+    use                                        Set current database
+    show                                       'show databases'/'show dbs': Print a list of all available databases.
+                                               'show collections'/'show tables': Print a list of all collections for current database.
+                                               'show profile': Prints system.profile information.
+                                               'show users': Print a list of all users for current database.
+                                               'show roles': Print a list of all roles for current database.
+                                               'show log <type>': log for current connection, if type is not set uses 'global'
+                                               'show logs': Print all logs.
+
+    exit                                       Quit the MongoDB shell with exit/exit()/.exit
+    quit                                       Quit the MongoDB shell with quit/quit()
+    Mongo                                      Create a new connection and return the Mongo object. Usage: new Mongo(URI, options [optional])
+    connect                                    Create a new connection and return the Database object. Usage: connect(URI, username [optional], password [optional])
+    it                                         result of the last line evaluated; use to further iterate
+    version                                    Shell version
+    load                                       Loads and runs a JavaScript file into the current shell environment
+    enableTelemetry                            Enables collection of anonymous usage data to improve the mongosh CLI
+    disableTelemetry                           Disables collection of anonymous usage data to improve the mongosh CLI
+    passwordPrompt                             Prompts the user for a password
+    sleep                                      Sleep for the specified number of milliseconds
+    print                                      Prints the contents of an object to the output
+    printjson                                  Alias for print()
+    cls                                        Clears the screen like console.clear()
+    isInteractive                              Returns whether the shell will enter or has entered interactive mode
+
+  For more information on usage: https://docs.mongodb.com/manual/reference/method
+test> show dbs
+admin    40.00 KiB
+config  108.00 KiB
+local    72.00 KiB
+test> use blazeclan
+switched to db blazeclan
+blazeclan> db.createCollection("staff")
+{ ok: 1 }
+blazeclan> show collections
+staff
+blazeclan> db.staff.insertOne({"staffName":"Anurag", "gender" : "M", "age" : 22, "email" : "anu@gmail.com", "salary" : 2000, "Married" : false})
+{
+  acknowledged: true,
+  insertedId: ObjectId("63108e0ca9171e76a91e6045")
+}
+blazeclan> db.staff.insertMany([ { "staffName": "Meet", "gender": "M", "age": 22, "salary": 2001, "Married": false }, { "staffName": "Manali", "gender": "F", "age": 22, "salary": 2002, "Married": false} ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("63109188a9171e76a91e6046"),
+    '1': ObjectId("63109188a9171e76a91e6047")
+  }
+}
+blazeclan> db.staff.find()
+[
+  {
+    _id: ObjectId("63108e0ca9171e76a91e6045"),
+    staffName: 'Anurag',
+    gender: 'M',
+    age: 22,
+    email: 'anu@gmail.com',
+    salary: 2000,
+    Married: false
+  },
+  {
+    _id: ObjectId("63109188a9171e76a91e6046"),
+    staffName: 'Meet',
+    gender: 'M',
+    age: 22,
+    salary: 2001,
+    Married: false
+  },
+  {
+    _id: ObjectId("63109188a9171e76a91e6047"),
+    staffName: 'Manali',
+    gender: 'F',
+    age: 22,
+    salary: 2002,
+    Married: false
+  }
+]
+
+---------------------------- IMPORTING employees Collection in Blazeclan ----------------------------
+
+C:\mongodb-database-tools-windows-x86_64-100.6.0\bin>mongoimport --db blazeclan --collection employees --drop --file C:\mongodb-database-tools-windows-x86_64-100.6.0\bin\employees.json
+2022-09-01T16:38:33.326+0530    connected to: mongodb://localhost/
+2022-09-01T16:38:33.330+0530    dropping: blazeclan.employees
+2022-09-01T16:38:33.353+0530    107 document(s) imported successfully. 0 document(s) failed to import.
+
+---------------------------- IMPORTING departments Collection in Blazeclan ----------------------------
+
+C:\mongodb-database-tools-windows-x86_64-100.6.0\bin>mongoimport --db blazeclan --collection employees --drop --file C:\mongodb-database-tools-windows-x86_64-100.6.0\bin\departments.json
+2022-09-01T16:40:17.770+0530    connected to: mongodb://localhost/
+2022-09-01T16:40:17.772+0530    dropping: blazeclan.employees
+2022-09-01T16:40:17.822+0530    Failed: cannot decode array into a primitive.D
+2022-09-01T16:40:17.822+0530    0 document(s) imported successfully. 0 document(s) failed to import.
+
+
+blazeclan> show collections
+departments
+employees
+staff
+blazeclan> db.employees.find().limit(2)
+[
+  {
+    _id: 100,
+    first_name: 'Steven',
+    last_name: 'King',
+    email: 'SKING',
+    phone_number: '515.123.4567',
+    hire_date: '2003-07-16T18:30:00.000Z',
+    job_id: 'AD_PRES',
+    salary: 24000,
+    commission_pct: null,
+    manager_id: null,
+    department_id: 90
+  },
+  {
+    _id: 101,
+    first_name: 'Neena',
+    last_name: 'Kochhar',
+    email: 'NKOCHHAR',
+    phone_number: '515.123.4568',
+    hire_date: '2005-10-20T18:30:00.000Z',
+    job_id: 'AD_VP',
+    salary: 17000,
+    commission_pct: null,
+    manager_id: 100,
+    department_id: 90
+  }
+]
+blazeclan> db.departments.find().limit(2)
+[
+  {
+    _id: ObjectId("6310940eeec43a1b51bc6ad0"),
+    department_id: 10,
+    department_name: 'Administration',
+    manager_id: 200,
+    location_id: 1700
+  },
+  {
+    _id: ObjectId("6310940eeec43a1b51bc6ad1"),
+    department_id: 20,
+    department_name: 'Marketing',
+    manager_id: 201,
+    location_id: 1800
+  }
+]
+blazeclan> db.employees.find({}, {"_id":true, "first_name" : true, "last_name" : true, "job_id" : true, "salary" : true}).limit(2);
+[
+  {
+    _id: 100,
+    first_name: 'Steven',
+    last_name: 'King',
+    job_id: 'AD_PRES',
+    salary: 24000
+  },
+  {
+    _id: 101,
+    first_name: 'Neena',
+    last_name: 'Kochhar',
+    job_id: 'AD_VP',
+    salary: 17000
+  }
+]
+blazeclan> db.employees.find({"salary" : {$gt : 12000}}, {"last_name" : true, "salary" : 1});
+[
+  { _id: 100, last_name: 'King', salary: 24000 },
+  { _id: 101, last_name: 'Kochhar', salary: 17000 },
+  { _id: 102, last_name: 'De Haan', salary: 17000 },
+  { _id: 108, last_name: 'Greenberg', salary: 12008 },
+  { _id: 145, last_name: 'Russell', salary: 14000 },
+  { _id: 146, last_name: 'Partners', salary: 13500 },
+  { _id: 201, last_name: 'Hartstein', salary: 13000 },
+  { _id: 205, last_name: 'Higgins', salary: 12008 }
+]
+blazeclan> db.employees.find({"_id" : {$eq : 176}}, {"last_name" :1, "department_id" : 1});
+[ { _id: 176, last_name: 'Taylor', department_id: 80 } ]
+blazeclan> db.employees.find({"salary" : {$gt : 5000, $lt : 12000}}, {"last_name" :1, "salary" : 1});
+[
+  { _id: 103, last_name: 'Hunold', salary: 9000 },
+  { _id: 104, last_name: 'Ernst', salary: 6000 },
+  { _id: 109, last_name: 'Faviet', salary: 9000 },
+  { _id: 110, last_name: 'Chen', salary: 8200 },
+  { _id: 111, last_name: 'Sciarra', salary: 7700 },
+  { _id: 112, last_name: 'Urman', salary: 7800 },
+  { _id: 113, last_name: 'Popp', salary: 6900 },
+  { _id: 114, last_name: 'Raphaely', salary: 11000 },
+  { _id: 120, last_name: 'Weiss', salary: 8000 },
+  { _id: 121, last_name: 'Fripp', salary: 8200 },
+  { _id: 122, last_name: 'Kaufling', salary: 7900 },
+  { _id: 123, last_name: 'Vollman', salary: 6500 },
+  { _id: 124, last_name: 'Mourgos', salary: 5800 },
+  { _id: 148, last_name: 'Cambrault', salary: 11000 },
+  { _id: 149, last_name: 'Zlotkey', salary: 10500 },
+  { _id: 150, last_name: 'Tucker', salary: 10000 },
+  { _id: 151, last_name: 'Bernstein', salary: 9500 },
+  { _id: 152, last_name: 'Hall', salary: 9000 },
+  { _id: 153, last_name: 'Olsen', salary: 8000 },
+  { _id: 154, last_name: 'Cambrault', salary: 7500 }
+]
+Type "it" for more
+blazeclan> db.employees.find({"department_id" : {$in : [20, 50]} }, {"first_name": 1,"last_name" :1, "department_id" : 1, "_id" : 0});
+[
+  { first_name: 'Matthew', last_name: 'Weiss', department_id: 50 },
+  { first_name: 'Adam', last_name: 'Fripp', department_id: 50 },
+  { first_name: 'Payam', last_name: 'Kaufling', department_id: 50 },
+  { first_name: 'Shanta', last_name: 'Vollman', department_id: 50 },
+  { first_name: 'Kevin', last_name: 'Mourgos', department_id: 50 },
+  { first_name: 'Julia', last_name: 'Nayer', department_id: 50 },
+  { first_name: 'Irene', last_name: 'Mikkilineni', department_id: 50 },
+  { first_name: 'James', last_name: 'Landry', department_id: 50 },
+  { first_name: 'Steven', last_name: 'Markle', department_id: 50 },
+  { first_name: 'Laura', last_name: 'Bissot', department_id: 50 },
+  { first_name: 'Mozhe', last_name: 'Atkinson', department_id: 50 },
+  { first_name: 'James', last_name: 'Marlow', department_id: 50 },
+  { first_name: 'TJ', last_name: 'Olson', department_id: 50 },
+  { first_name: 'Jason', last_name: 'Mallin', department_id: 50 },
+  { first_name: 'Michael', last_name: 'Rogers', department_id: 50 },
+  { first_name: 'Ki', last_name: 'Gee', department_id: 50 },
+  { first_name: 'Hazel', last_name: 'Philtanker', department_id: 50 },
+  { first_name: 'Renske', last_name: 'Ladwig', department_id: 50 },
+  { first_name: 'Stephen', last_name: 'Stiles', department_id: 50 },
+  { first_name: 'John', last_name: 'Seo', department_id: 50 }
+]
+Type "it" for more
+blazeclan> db.employees.find({"department_id" : {$in : [20, 50]} }, {"first_name": 1,"last_name" :1, "department_id" : 1, "_id" : 0}).sort({"last_name" : 1});
+[
+  { first_name: 'Mozhe', last_name: 'Atkinson', department_id: 50 },
+  { first_name: 'Sarah', last_name: 'Bell', department_id: 50 },
+  { first_name: 'Laura', last_name: 'Bissot', department_id: 50 },
+  { first_name: 'Alexis', last_name: 'Bull', department_id: 50 },
+  { first_name: 'Anthony', last_name: 'Cabrio', department_id: 50 },
+  { first_name: 'Kelly', last_name: 'Chung', department_id: 50 },
+  { first_name: 'Curtis', last_name: 'Davies', department_id: 50 },
+  { first_name: 'Julia', last_name: 'Dellinger', department_id: 50 },
+  { first_name: 'Jennifer', last_name: 'Dilly', department_id: 50 },
+  { first_name: 'Britney', last_name: 'Everett', department_id: 50 },
+  { first_name: 'Pat', last_name: 'Fay', department_id: 20 },
+  { first_name: 'Kevin', last_name: 'Feeney', department_id: 50 },
+  { first_name: 'Jean', last_name: 'Fleaur', department_id: 50 },
+  { first_name: 'Adam', last_name: 'Fripp', department_id: 50 },
+  { first_name: 'Timothy', last_name: 'Gates', department_id: 50 },
+  { first_name: 'Ki', last_name: 'Gee', department_id: 50 },
+  { first_name: 'Girard', last_name: 'Geoni', department_id: 50 },
+  { first_name: 'Douglas', last_name: 'Grant', department_id: 50 },
+  { first_name: 'Michael', last_name: 'Hartstein', department_id: 20 },
+  { first_name: 'Vance', last_name: 'Jones', department_id: 50 }
+]
+Type "it" for more
+
+// 13
+
+blazeclan> db.employees.find({"salary": {$gt : 5000, $lt:12000}, "department_id" : {$in : [20, 50]} }, {"last_name" :1, "salary" : 1, "_id" : 0}).sort({"first_name" : 1});
+[
+  { last_name: 'Fripp', salary: 8200 },
+  { last_name: 'Mourgos', salary: 5800 },
+  { last_name: 'Weiss', salary: 8000 },
+  { last_name: 'Fay', salary: 6000 },
+  { last_name: 'Kaufling', salary: 7900 },
+  { last_name: 'Vollman', salary: 6500 }
+]
+blazeclan> db.employees.find({"commission_pct" : {$ne : null}}, {"last_name" : 1, "salary" : 1, "commission_pct" : 1} )
+[
+  {
+    _id: 145,
+    last_name: 'Russell',
+    salary: 14000,
+    commission_pct: 0.4
+  },
+  {
+    _id: 146,
+    last_name: 'Partners',
+    salary: 13500,
+    commission_pct: 0.3
+  },
+  {
+    _id: 147,
+    last_name: 'Errazuriz',
+    salary: 12000,
+    commission_pct: 0.3
+  },
+  {
+    _id: 148,
+    last_name: 'Cambrault',
+    salary: 11000,
+    commission_pct: 0.3
+  },
+  {
+    _id: 149,
+    last_name: 'Zlotkey',
+    salary: 10500,
+    commission_pct: 0.2
+  },
+  { _id: 150, last_name: 'Tucker', salary: 10000, commission_pct: 0.3 },
+  {
+    _id: 151,
+    last_name: 'Bernstein',
+    salary: 9500,
+    commission_pct: 0.25
+  },
+  { _id: 152, last_name: 'Hall', salary: 9000, commission_pct: 0.25 },
+  { _id: 153, last_name: 'Olsen', salary: 8000, commission_pct: 0.2 },
+  {
+    _id: 154,
+    last_name: 'Cambrault',
+    salary: 7500,
+    commission_pct: 0.2
+  },
+  {
+    _id: 155,
+    last_name: 'Tuvault',
+    salary: 7000,
+    commission_pct: 0.15
+  },
+  { _id: 156, last_name: 'King', salary: 10000, commission_pct: 0.35 },
+  { _id: 157, last_name: 'Sully', salary: 9500, commission_pct: 0.35 },
+  { _id: 158, last_name: 'McEwen', salary: 9000, commission_pct: 0.35 },
+  { _id: 159, last_name: 'Smith', salary: 8000, commission_pct: 0.3 },
+  { _id: 160, last_name: 'Doran', salary: 7500, commission_pct: 0.3 },
+  { _id: 161, last_name: 'Sewall', salary: 7000, commission_pct: 0.25 },
+  {
+    _id: 162,
+    last_name: 'Vishney',
+    salary: 10500,
+    commission_pct: 0.25
+  },
+  { _id: 163, last_name: 'Greene', salary: 9500, commission_pct: 0.15 },
+  { _id: 164, last_name: 'Marvins', salary: 7200, commission_pct: 0.1 }
+]
+Type "it" for more
+blazeclan> db.employees.find({"commission_pct" : {$ne : null}}, {"last_name" : 1, "salary" : 1, "commission_pct" : 1} ).sort({"salary" : -1})
+[
+  {
+    _id: 145,
+    last_name: 'Russell',
+    salary: 14000,
+    commission_pct: 0.4
+  },
+  {
+    _id: 146,
+    last_name: 'Partners',
+    salary: 13500,
+    commission_pct: 0.3
+  },
+  {
+    _id: 147,
+    last_name: 'Errazuriz',
+    salary: 12000,
+    commission_pct: 0.3
+  },
+  { _id: 168, last_name: 'Ozer', salary: 11500, commission_pct: 0.25 },
+  {
+    _id: 148,
+    last_name: 'Cambrault',
+    salary: 11000,
+    commission_pct: 0.3
+  },
+  { _id: 174, last_name: 'Abel', salary: 11000, commission_pct: 0.3 },
+  {
+    _id: 149,
+    last_name: 'Zlotkey',
+    salary: 10500,
+    commission_pct: 0.2
+  },
+  {
+    _id: 162,
+    last_name: 'Vishney',
+    salary: 10500,
+    commission_pct: 0.25
+  },
+  { _id: 150, last_name: 'Tucker', salary: 10000, commission_pct: 0.3 },
+  { _id: 156, last_name: 'King', salary: 10000, commission_pct: 0.35 },
+  { _id: 169, last_name: 'Bloom', salary: 10000, commission_pct: 0.2 },
+  { _id: 170, last_name: 'Fox', salary: 9600, commission_pct: 0.2 },
+  {
+    _id: 151,
+    last_name: 'Bernstein',
+    salary: 9500,
+    commission_pct: 0.25
+  },
+  { _id: 157, last_name: 'Sully', salary: 9500, commission_pct: 0.35 },
+  { _id: 163, last_name: 'Greene', salary: 9500, commission_pct: 0.15 },
+  { _id: 152, last_name: 'Hall', salary: 9000, commission_pct: 0.25 },
+  { _id: 158, last_name: 'McEwen', salary: 9000, commission_pct: 0.35 },
+  { _id: 175, last_name: 'Hutton', salary: 8800, commission_pct: 0.25 },
+  { _id: 176, last_name: 'Taylor', salary: 8600, commission_pct: 0.2 },
+  {
+    _id: 177,
+    last_name: 'Livingston',
+    salary: 8400,
+    commission_pct: 0.2
+  }
+]
+Type "it" for more
+
+// 15
+// 16
+
+blazeclan> db.employees.find({"first_name" : {$regex : "^P"} }, {"last_name" : 1, "first_name" : 1})
+[
+  { _id: 122, first_name: 'Payam', last_name: 'Kaufling' },
+  { _id: 144, first_name: 'Peter', last_name: 'Vargas' },
+  { _id: 150, first_name: 'Peter', last_name: 'Tucker' },
+  { _id: 152, first_name: 'Peter', last_name: 'Hall' },
+  { _id: 157, first_name: 'Patrick', last_name: 'Sully' },
+  { _id: 202, first_name: 'Pat', last_name: 'Fay' }
+]
+blazeclan> db.employees.find({"first_name" : {$regex : "^li", $options : 'i'}  }, {"last_name" : 1, "first_name" : 1})
+[
+  { _id: 159, first_name: 'Lindsey', last_name: 'Smith' },
+  { _id: 168, first_name: 'Lisa', last_name: 'Ozer' }
+]
+
+blazeclan> db.employees.find({"job_id" : {$in : ['SA_REP', 'ST_CLERK']}, "salary": {$nin : [2500, 3500, 7000]} }, {last_name:1, job_id:1, salary:1} )
+[
+  { _id: 125, last_name: 'Nayer', job_id: 'ST_CLERK', salary: 3200 },
+  {
+    _id: 126,
+    last_name: 'Mikkilineni',
+    job_id: 'ST_CLERK',
+    salary: 2700
+  },
+  { _id: 127, last_name: 'Landry', job_id: 'ST_CLERK', salary: 2400 },
+  { _id: 128, last_name: 'Markle', job_id: 'ST_CLERK', salary: 2200 },
+  { _id: 129, last_name: 'Bissot', job_id: 'ST_CLERK', salary: 3300 },
+  { _id: 130, last_name: 'Atkinson', job_id: 'ST_CLERK', salary: 2800 },
+  { _id: 132, last_name: 'Olson', job_id: 'ST_CLERK', salary: 2100 },
+  { _id: 133, last_name: 'Mallin', job_id: 'ST_CLERK', salary: 3300 },
+  { _id: 134, last_name: 'Rogers', job_id: 'ST_CLERK', salary: 2900 },
+  { _id: 135, last_name: 'Gee', job_id: 'ST_CLERK', salary: 2400 },
+  {
+    _id: 136,
+    last_name: 'Philtanker',
+    job_id: 'ST_CLERK',
+    salary: 2200
+  },
+  { _id: 137, last_name: 'Ladwig', job_id: 'ST_CLERK', salary: 3600 },
+  { _id: 138, last_name: 'Stiles', job_id: 'ST_CLERK', salary: 3200 },
+  { _id: 139, last_name: 'Seo', job_id: 'ST_CLERK', salary: 2700 },
+  { _id: 142, last_name: 'Davies', job_id: 'ST_CLERK', salary: 3100 },
+  { _id: 143, last_name: 'Matos', job_id: 'ST_CLERK', salary: 2600 },
+  { _id: 150, last_name: 'Tucker', job_id: 'SA_REP', salary: 10000 },
+  { _id: 151, last_name: 'Bernstein', job_id: 'SA_REP', salary: 9500 },
+  { _id: 152, last_name: 'Hall', job_id: 'SA_REP', salary: 9000 },
+  { _id: 153, last_name: 'Olsen', job_id: 'SA_REP', salary: 8000 }
+]
+Type "it" for more
+blazeclan> db.employees.find({"commission_pct" : {$eq : 0.2} }, {last_name:1, salary:1, commission_pct:1} )
+[
+  {
+    _id: 149,
+    last_name: 'Zlotkey',
+    salary: 10500,
+    commission_pct: 0.2
+  },
+  { _id: 153, last_name: 'Olsen', salary: 8000, commission_pct: 0.2 },
+  {
+    _id: 154,
+    last_name: 'Cambrault',
+    salary: 7500,
+    commission_pct: 0.2
+  },
+  { _id: 169, last_name: 'Bloom', salary: 10000, commission_pct: 0.2 },
+  { _id: 170, last_name: 'Fox', salary: 9600, commission_pct: 0.2 },
+  { _id: 176, last_name: 'Taylor', salary: 8600, commission_pct: 0.2 },
+  {
+    _id: 177,
+    last_name: 'Livingston',
+    salary: 8400,
+    commission_pct: 0.2
+  }
+]
